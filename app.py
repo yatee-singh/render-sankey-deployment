@@ -605,7 +605,7 @@ def update_sankey_diagram(n,n_inc,n_dec,branch1,operation,e):
 
         
 
-app.run_server(host="0.0.0.0", port="8050")
+app.run_server(host="0.0.0.0", port="1000")
 
 
 if __name__ == '__main__':
