@@ -222,8 +222,8 @@ app.layout = html.Div([
     ),
          dcc.Interval(
             id='interval-component',
-            interval=5*60*1000, # in milliseconds
-            n_intervals=0
+            interval=1*60*1000, # in milliseconds
+            
         ),
             html.Div(id='output-interval',children=ist1.strftime("%B %d, %Y %I:%M %p %Z"))
             , html.Hr(style={'height': '1px', 'border-width': '0', 'background-color': 'black', 'margin-top': '15px', 'margin-bottom': '15px','margin-top':'2vh'}),
@@ -517,9 +517,9 @@ def update_sankey_diagram(n,n_inc,n_dec,branch1,operation,e):
 
         return [updated_fig, "",ist1.strftime("%B %d, %Y %I:%M %p %Z"),disabled]
     else:
-        t1=t1+timedelta(minutes=5)
-        ist1=ist1+timedelta(minutes=5)
-        t2=t2+timedelta(minutes=5)
+        t1=t1+n*timedelta(minutes=1)
+        ist1=ist1+n*timedelta(minutes=1)
+        t2=t2+n*timedelta(minutes=1)
         url=make_req_url((t1-timedelta(minutes=5)).strftime('%a, %d %b %Y %H:%M:%S GMT'),(t2-timedelta(minutes=5)).strftime('%a, %d %b %Y %H:%M:%S GMT'))
         url2=make_req_url_temp((t1-timedelta(minutes=5)).strftime('%a, %d %b %Y %H:%M:%S GMT'),(t2-timedelta(minutes=5)).strftime('%a, %d %b %Y %H:%M:%S GMT'))
         print("URLLLLLLLLL IUSSSSSSSS",url)
