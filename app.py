@@ -52,28 +52,28 @@ def make_req_url_temp(t1,t2):
     return url
 
 
-now=datetime.now(timezone.utc)
-ist_now=datetime.now(ist_timezone)
-t1=now-timedelta(minutes=5)
-ist1=ist_now-timedelta(minutes=5)
-t2=now
-t11=(t1-timedelta(minutes=5)).strftime('%a, %d %b %Y %H:%M:%S GMT')
-t21=(t2-timedelta(minutes=5)).strftime('%a, %d %b %Y %H:%M:%S GMT')
-url=make_req_url(t11,t21)
-print(url)
+# now=datetime.now(timezone.utc)
+# ist_now=datetime.now(ist_timezone)
+# t1=now-timedelta(minutes=5)
+# ist1=ist_now-timedelta(minutes=5)
+# t2=now
+# t11=(t1-timedelta(minutes=5)).strftime('%a, %d %b %Y %H:%M:%S GMT')
+# t21=(t2-timedelta(minutes=5)).strftime('%a, %d %b %Y %H:%M:%S GMT')
+# url=make_req_url(t11,t21)
+# print(url)
 
-#fetching data and making lab,sec,tar,val
-r = requests.get(url) 
-data={}
+# #fetching data and making lab,sec,tar,val
+# r = requests.get(url) 
+# data={}
 
 
-if r.status_code == 200:
-    data = r.json()
-else:
-    print("Failed to fetch data from the API. Status code:", r.status_code)
+# if r.status_code == 200:
+#     data = r.json()
+# else:
+#     print("Failed to fetch data from the API. Status code:", r.status_code)
 
-#last_heard
-print(data)
+# #last_heard
+# print(data)
 
 def update_last_heard():
     table_rows = []
@@ -138,49 +138,49 @@ table =dash_table.DataTable(df_sorted.to_dict('records'), [{"name": i, "id": i} 
 # ans=update_last_heard()
 # print(ans)
 
-if(data['_items']!=[]):
-    df = pd.DataFrame.from_dict(pd.json_normalize(data['_items']), orient='columns')
-    lab=list(df.Device_ID.unique())
-    print("lables are",lab)
-    lab.insert(0,"MAIN_SUPPLY")
+# if(data['_items']!=[]):
+#     df = pd.DataFrame.from_dict(pd.json_normalize(data['_items']), orient='columns')
+#     lab=list(df.Device_ID.unique())
+#     print("lables are",lab)
+#     lab.insert(0,"MAIN_SUPPLY")
 
 
-    #cretes power consumed column
-    # df['power']=abs(df['Real_power'])
-    df['power'] = pd.to_numeric(df['Real_power'], errors='coerce')
-    df['power'].fillna(0, inplace=True)
-    #finds avg power consumption
-    averaged_columns=df.groupby(['Device_ID'])[df.select_dtypes(include='number').columns].mean()
-    print(url)
-    print(averaged_columns)
+#     #cretes power consumed column
+#     # df['power']=abs(df['Real_power'])
+#     df['power'] = pd.to_numeric(df['Real_power'], errors='coerce')
+#     df['power'].fillna(0, inplace=True)
+#     #finds avg power consumption
+#     averaged_columns=df.groupby(['Device_ID'])[df.select_dtypes(include='number').columns].mean()
+#     print(url)
+#     print(averaged_columns)
 
-    #loads data for sankey diagram creation
-    for r in averaged_columns.iterrows():
-        src.append(0)
-        temp=r[0]
-        tar.append(lab.index(r[0]))
-        val.append(r[1]['power'])
+#     #loads data for sankey diagram creation
+#     for r in averaged_columns.iterrows():
+#         src.append(0)
+#         temp=r[0]
+#         tar.append(lab.index(r[0]))
+#         val.append(r[1]['power'])
 
 
-link_color = [color_code1]* len(src)# color of the links
-node_colors = [color_code2]*len(lab)
+# link_color = [color_code1]* len(src)# color of the links
+# node_colors = [color_code2]*len(lab)
 
-fig = go.Figure(
-    go.Sankey(
-        node=dict(
-            pad=15,
-            thickness=20,
-            line=dict(color="black", width=0.5),
-            label=lab,
-            color=node_colors
-        ),
-        link=dict(
-            source=src,
-            target=tar,
-            value=val,
-            color=link_color
-        )
-    ))
+# fig = go.Figure(
+#     go.Sankey(
+#         node=dict(
+#             pad=15,
+#             thickness=20,
+#             line=dict(color="black", width=0.5),
+#             label=lab,
+#             color=node_colors
+#         ),
+#         link=dict(
+#             source=src,
+#             target=tar,
+#             value=val,
+#             color=link_color
+#         )
+#     ))
 
 event = {"event": "click", "props": ["shiftKey"]}  #defining which prop of the event 'click' is needed 
 
@@ -216,7 +216,7 @@ app.layout = html.Div([
             html.Div([
         EventListener(
         html.Div([
-             dcc.Graph(figure=fig,id='sankey-diagram'),
+             dcc.Graph(id='sankey-diagram'),
         ]),
         events=[event], logging=True, id="el", style={'flex': '1','width':'100%'}
     ),
@@ -225,7 +225,7 @@ app.layout = html.Div([
             interval=1*60*1000, # in milliseconds
             
         ),
-            html.Div(id='output-interval',children=ist1.strftime("%B %d, %Y %I:%M %p %Z"))
+            html.Div(id='output-interval')
             , html.Hr(style={'height': '1px', 'border-width': '0', 'background-color': 'black', 'margin-top': '15px', 'margin-bottom': '15px','margin-top':'2vh'}),
            html.Div(dcc.Dropdown(
     id='branch-dropdown2',
@@ -591,21 +591,6 @@ def update_sankey_diagram(n,n_inc,n_dec,branch1,operation,e):
         return [updated_fig, "",ist1.strftime("%B %d, %Y %I:%M %p %Z"),disabled]
        
 
-
-
-
-
-# @dash.callback(
-   
-#     Output('last-heard', 'children'),
-   
-#        prevent_initial_call=True
-#     )
-
-
-        
-
-app.run_server(host="0.0.0.0", port="1000")
 
 
 if __name__ == '__main__':
