@@ -1,10 +1,106 @@
-# sankey-diagram
+# Dynamic Sankey Diagram Dashboard
+
+This project is a dynamic dashboard built using Dash, Plotly, and Dash Bootstrap Components. The dashboard displays a **Sankey Diagram** to visualize energy flow dynamically, along with a table showing the "Last Heard" timestamps for connected sensors.
+
+---
 
 - Sankey diagrams are a data visualisation technique or flow diagram that emphasizes flow/movement/change from one state to another or one time to another, in which the width of the arrows is proportional to the flow rate of the depicted extensive property.
 - Here sankey diagram is used to represent energy consumed by different ACs/Buildings/Blocks in a College Campus.
 
 <img width="940" alt="ss1" src="https://github.com/yatee-singh/sankey-diagram/assets/101913573/3ab2597d-3cc6-4832-b365-2a5cbf392d5c">
 
+---
+## Main Components and Working of the Project
+
+The project is designed as an interactive visualization tool that incorporates real-time data and user interactions to analyze and display connections between sensor devices. Below is a breakdown of its key components and their functionalities:
+
+---
+
+### 1. **Sankey Diagram**
+The Sankey diagram is the core visual component of the project, providing a graphical representation of flows between nodes. 
+
+#### Features:
+- **Nodes**: Represent sensor devices or data sources.
+- **Links**: Represent the data flow between nodes, with link thickness proportional to the data volume.
+- **Interactivity**: Users can interact with nodes and links to:
+  - Highlight specific connections.
+  - Hide or unhide selected links.
+  - Group or ungroup nodes for simplified or detailed views.
+
+#### Working:
+- Data is fetched from a backend source or a predefined dataset.
+- Links and nodes are dynamically rendered to reflect the latest updates.
+- User interactions trigger visual or structural updates to the diagram.
+
+---
+
+### 2. **Real-Time Data Updates**
+The system integrates real-time data fetching to ensure the displayed information is up-to-date.
+
+#### Features:
+- **Interval Updates**: Data is refreshed every 5 minutes automatically.
+- **User-Triggered Refresh**: Allows users to manually fetch the latest data if required.
+- **Device-Specific Data**: Each device's current status and metrics are displayed in the device table.
+
+#### Working:
+- A background process or API call fetches data from connected sensors or a database.
+- The fetched data updates the visualization and device table without requiring a page refresh.
+
+---
+
+### 3. **Device Table**
+A tabular component that complements the Sankey diagram by showing detailed information about each device.
+
+#### Features:
+- Lists all active sensors and their latest fetched data.
+- Displays metrics such as:
+  - Device status (active/inactive).
+  - Timestamp of the last update.
+  - Any anomalies or alerts associated with the device.
+- Allows for quick reference and troubleshooting.
+
+---
+
+### 4. **User Interaction Controls**
+The project provides various controls to customize the visualization:
+
+#### Navigation Buttons:
+- **Left Button**: Moves the time window backward by 5 minutes, allowing users to view historical data.
+- **Right Button**: Moves the time window forward by 5 minutes to return to the latest data.
+
+#### Dropdown Actions:
+- **Highlight**: Brings attention to a selected link or set of links in the Sankey diagram.
+- **Hide/Unhide**: Enables toggling the visibility of certain connections for a clearer view.
+- **Group/Ungroup**: Lets users group related nodes into a single node or split them for a detailed view.
+
+---
+
+### Workflow
+1. **Initialization**:
+   - The project loads the initial data and renders the Sankey diagram along with the device table.
+2. **Real-Time Updates**:
+   - Every 5 minutes, new data is fetched, and the visualization is updated.
+3. **User Interactions**:
+   - Users interact with the Sankey diagram using controls like navigation buttons and dropdown actions.
+4. **Analysis and Reporting**:
+   - Users analyze connections and sensor performance using the visual and tabular data.
+
+---
+
+This setup ensures a dynamic and user-friendly interface for analyzing and monitoring sensor data flow effectively.
+
+
+---
+
+## Installation
+
+### Prerequisites
+
+Ensure you have the following installed:
+- Python 3.7+
+- Required Python libraries:
+  ```bash
+  pip install dash plotly pandas dash-bootstrap-components requests pytz dash-extensions
 
 ## Dependencies:
 - Python (3.11) [python](https://www.python.org/downloads/)
@@ -72,7 +168,7 @@
     - Detach from the session ( Ctrl + a followed by d)
     - Exit ssh connection.
       
-  
+
 
 
 
