@@ -55,67 +55,72 @@ initial_data = {
     "node_colors": [], 
 }
 # App layout
-app.layout = dbc.Container(
-    [
-
+app.layout = html.Div(
+    style={"fontFamily": "Arial, sans-serif", "padding": "20px", "maxWidth": "1200px", "margin": "auto"},
+    children=[
         html.H1("Dynamic Sankey Diagram Dashboard", style={"textAlign": "center", "marginTop": "20px"}),
-    dcc.Store(id='open-time-store') ,
-    dcc.Store(id='display-time-store') ,
-    dcc.Store(id='initial') ,
-        # Row for buttons and graph, center aligned
-        dcc.Store(id="sankey-store", data=initial_data),
-        
+
+        # Data Stores
+        dcc.Store(id="open-time-store"),
+        dcc.Store(id="display-time-store"),
+        dcc.Store(id="initial"),
+        dcc.Store(id="sankey-store", data={}),
         dcc.Store(id="branch-store", data=[]),
         dcc.Store(id="groups-store", data=[{}]),
-        dbc.Row(
-            [
-                # Button on the left (using Font Awesome icon)
-                dbc.Col(
-                    dbc.Button(
-                        html.I(className="fa fa-arrow-left"),  # Font Awesome Left Arrow Icon
-                        id="left-button", color="primary", className="me-2", size="lg", 
-                        style={"display": "flex", "justifyContent": "center", "alignItems": "center"}
-                    ),
-                    width="auto",  # Button takes only as much space as it needs
-                ),
 
-                # Sankey graph in the center
-                dbc.Col(
-                    EventListener(
+        # Row for Buttons and Sankey Graph
+        html.Div(
+            style={"display": "flex", "alignItems": "center", "justifyContent": "center", "marginTop": "20px"},
+            children=[
+                # Left Button
+                html.Button(
+                    "◀",
+                    id="left-button",
+                    style={
+                        "padding": "10px 15px",
+                        "fontSize": "18px",
+                        "borderRadius": "5px",
+                        "backgroundColor": "#007bff",
+                        "color": "white",
+                        "border": "none",
+                        "cursor": "pointer",
+                    },
+                ),
+                # Sankey Graph
+                  EventListener(
         html.Div([
              dcc.Graph(id="sankey-graph", style={"marginTop": "20px"})
                  
         ]),
         events=[event], logging=True, id="el", style={'flex': '1','width':'100%'}
     ),
-                    
+                # Right Button
+                html.Button(
+                    "▶",
+                    id="right-button",
+                    style={
+                        "padding": "10px 15px",
+                        "fontSize": "18px",
+                        "borderRadius": "5px",
+                        "backgroundColor": "#28a745",
+                        "color": "white",
+                        "border": "none",
+                        "cursor": "pointer",
+                    },
                 ),
-
-                # Button on the right (using Font Awesome icon)
-                dbc.Col(
-                    dbc.Button(
-                        html.I(className="fa fa-arrow-right"),  # Font Awesome Right Arrow Icon
-                        id="right-button", color="success", className="ms-2", size="lg", 
-                        style={"display": "flex", "justifyContent": "center", "alignItems": "center"}
-                    ),
-                    width="auto",  # Button takes only as much space as it needs
-                ),
-                
-                
             ],
-            align="center",  # Center-align all elements in the row
-            justify="center",  # Horizontally center the content in the row
-            className="g-2",  # Add gutter between columns
         ),
-         html.Div(
+
+        # Time Display
+        html.Div(
             id="time-display",
-            style={"textAlign": "center", "fontSize": "20px", "marginTop": "10px"},
+            style={"textAlign": "center", "fontSize": "18px", "marginTop": "10px"},
         ),
-        
-        # Dropdown to select an action
+
+        # Dropdown for Action Selection
         html.Div(
             [
-                html.Label("Action:"),
+                html.Label("Select Action:", style={"fontSize": "16px", "fontWeight": "bold", "display": "block"}),
                 dcc.Dropdown(
                     id="action-dropdown",
                     options=[
@@ -127,44 +132,53 @@ app.layout = dbc.Container(
                         {"label": "Un-group", "value": "ungroup"},
                     ],
                     placeholder="Select an action",
+                    style={"width": "50%", "margin": "10px auto"},
                 ),
             ],
-            style={"marginTop": "20px", "textAlign": "center", "width": "50%", "margin": "0 auto"},
+            style={"textAlign": "center", "marginTop": "20px"},
         ),
 
-        # Other display elements
-        
-       
+        # Error Display
         html.Div(
             id="error-display",
-            style={"textAlign": "center", "fontSize": "20px", "marginTop": "10px", "color": "red"},
+            style={"textAlign": "center", "fontSize": "18px", "marginTop": "10px", "color": "red"},
         ),
 
-        # Interval component for periodic updates
-        dcc.Interval(
-            id="interval-component",
-            interval=5*60 * 1000,  
-            n_intervals=0,
-        ),
-        dcc.Store(id="data-store"),
-        # Page content
-        dbc.Container(
-            [
-                
+        # Data Table
+        html.Div(
+            style={"marginTop": "30px"},
+            children=[
+                html.H2("Sensor Data", style={"textAlign": "center", "marginBottom": "20px"}),
                 dash_table.DataTable(
                     id="data-table",
                     columns=[
                         {"name": "Sensor_ID", "id": "id"},
                         {"name": "Last Heard", "id": "date"},
                     ],
-                    style_table={"overflowX": "auto"},
-                    style_cell={"textAlign": "center", "padding": "5px"},
-                    style_header={"fontWeight": "bold"},
+                    style_table={"overflowX": "auto", "margin": "0 auto", "width": "80%"},
+                    style_cell={
+                        "textAlign": "center",
+                        "padding": "10px",
+                        "border": "1px solid #ddd",
+                        "fontSize": "14px",
+                    },
+                    style_header={
+                        "fontWeight": "bold",
+                        "backgroundColor": "#f4f4f4",
+                        "border": "1px solid #ddd",
+                    },
                 ),
-            ]
-        )
+            ],
+        ),
+
+        # Interval Component
+        dcc.Interval(
+            id="interval-component",
+            interval=5 * 60 * 1000,  # 5 minutes
+            n_intervals=0,
+        ),
+        dcc.Store(id="data-store"),
     ],
-    fluid=True,
 )
 
 
@@ -446,6 +460,7 @@ def update_table(store_data):
 
 def update_diagram(operation,clickData,sankey_data,branch_store,groups,e):
         branches=branch_store
+        print("hey")
      
         if(clickData!=None):
             branch=clickData['points'][0]['index'] 
