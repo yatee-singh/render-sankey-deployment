@@ -625,5 +625,8 @@ def update_sankey(data):
         ))
     return updated_fig
 
-if __name__ == "__main__":
-    app.run_server(debug=True,port=8052)
+app.run_server(host="0.0.0.0", port="8050")
+
+
+if __name__ == '__main__':
+    app.run(debug=True)
