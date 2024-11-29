@@ -3,7 +3,6 @@
 
 import dash
 from dash import dcc, html,ctx,dash_table
-import dash_bootstrap_components as dbc
 from dash.dependencies import Input, Output,State
 import plotly.graph_objects as go
 import random
@@ -12,13 +11,13 @@ import pandas as pd
 from datetime import datetime,timedelta,timezone
 import dash
 from dash import dcc, html
-import dash_bootstrap_components as dbc
+
 from dash.dependencies import Input, Output
 import plotly.graph_objects as go
 import pytz
 from dash_extensions import EventListener
 # Create Dash app
-app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
+app = dash.Dash(__name__)
 event = {"event": "click", "props": ["shiftKey"]} 
 ist_timezone = pytz.timezone("Asia/Kolkata")
 src=[]
@@ -45,7 +44,7 @@ def make_req_url(t1,t2):
 
 
 # Create Dash app
-app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
+app = dash.Dash(__name__)
 initial_data = {
     "lab": ["Node A", "Node B", "Node C", "Node D"],
     "src": [0, 1, 0, 2],
